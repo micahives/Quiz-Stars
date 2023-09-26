@@ -11,3 +11,32 @@ header {
 .right-heading {
     margin-left: auto;
   }
+
+section {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+section h3 {
+    font-size: 48px;
+    margin: auto;
+}
+
+section p {
+    font-size: 32px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+button {
+    background-color: #386641;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    width: 200px;
+    height: 50px;
+}
