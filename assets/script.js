@@ -2,6 +2,11 @@ var timerElement = document.getElementById('countdown');
 
 var startButton = document.getElementById('startButton');
 
+var homeContent = document.getElementById('homeContent');
+
+var score = 0;
+
+
 const quizQuestions = [
     {
         question: "What HTML element is used to embed JavaScript code?",
@@ -22,6 +27,7 @@ const quizQuestions = [
 
 startButton.addEventListener('click', function() {
     startButton.disabled = true;
+    homeContent.style.display = 'none';
 
     countdown();
 });
@@ -31,7 +37,7 @@ function countdown() {
 
     var timeInterval = setInterval(function () {
         if (timeLeft >= 0) {
-            timerElement.textContent = "Time remaining: " + timeLeft;
+            timerElement.textContent = "Time Remaining: " + timeLeft;
 
             timeLeft--;
         } else {
@@ -45,5 +51,24 @@ function countdown() {
     }, 1000);
 }
 
-// For loop through quiz content in js that renders a different set of questions each time a button is clicked
+// When the user hits the "Start Quiz!" button, runs this function
+function runQuiz() {
+    // For loop through quiz content in js that renders a different set of questions each time a button is clicked
+}
 
+// This function will generate a random quiz question and that question will display as the UI
+function renderQuiz() {
+    var randomIndex = Math.floor(Math.random() * quizQuestions.length);
+    var randomQuestion = quizQuestions[randomIndex];
+    var randomQuestionEl = document.getElementById(randomQuestion.question);
+
+
+    // Display the random question as an h3 tag on the page
+    var questionTitle = document.createElement("h3");
+    questionTitle.textContent = randomQuestion.question;
+    console.log(randomQuestion.question);
+
+
+}
+
+renderQuiz();
