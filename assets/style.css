@@ -40,3 +40,9 @@ button {
     width: 200px;
     height: 50px;
 }
+
+button:hover {
+    background-color: #539760;
+    transform: scale(1.05);
+    cursor: pointer;
+}
