@@ -1,11 +1,12 @@
-var timerElement = document.getElementById('countdown');
+var preGame = document.getElementById("pre-game");
+var game = document.getElementById("game");
+var gameEnd = document.getElementById("game-end");
+var hiScore = document.getElementById("hi-score");
 
+var timerElement = document.getElementById('countdown');
 var startButton = document.getElementById('startButton');
 
-var homeContent = document.getElementById('homeContent');
-
 var score = 0;
-
 
 const quizQuestions = [
     {
@@ -27,10 +28,26 @@ const quizQuestions = [
 
 startButton.addEventListener('click', function() {
     startButton.disabled = true;
-    homeContent.style.display = 'none';
-
     countdown();
+    startGame();
 });
+
+function startGame() {
+    preGame.setAttribute("class", "is-inactive");
+    game.setAttribute("class", "is-active");
+}
+
+function endGame() {
+    game.setAttribute("class", "is-inactive");
+    gameEnd.setAttribute("class", "is-active");
+}
+
+function viewHiScore() {
+    preGame.setAttribute("class", "is-inactive");
+    game.setAttribute("class", "is-inactive");
+    gameEnd.setAttribute("class", "is-inactive");
+    hiScore.setAttribute("class", "is-active");
+}
 
 function countdown() {
     var timeLeft = 60;
@@ -38,22 +55,11 @@ function countdown() {
     var timeInterval = setInterval(function () {
         if (timeLeft >= 0) {
             timerElement.textContent = "Time Remaining: " + timeLeft;
-
             timeLeft--;
         } else {
-
             clearInterval(timeInterval);
-            // Want to add red font/box flashing around timer when it is the last 10 seconds
-
         }
-
-
     }, 1000);
-}
-
-// When the user hits the "Start Quiz!" button, runs this function
-function runQuiz() {
-    // For loop through quiz content in js that renders a different set of questions each time a button is clicked
 }
 
 // This function will generate a random quiz question and that question will display as the UI
@@ -67,8 +73,5 @@ function renderQuiz() {
     var questionTitle = document.createElement("h3");
     questionTitle.textContent = randomQuestion.question;
     console.log(randomQuestion.question);
-
-
 }
 
-renderQuiz();

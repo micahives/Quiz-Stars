@@ -12,19 +12,25 @@
         <h2 class="right heading" id="countdown">Time Remaining: 0 </h2>
     </header>
 
-    <section id="homeContent">
+    <section id="pre-game" class="is-active">
         <h3>Coding Quiz Challenge</h3>
         <p>Try to answer as many coding-related questions within the time limit (top right of screen). Incorrect answers will subtract 10 seconds from the clock!</p>
         <button id="startButton">Start Quiz!</button>
     </section>
     
     <!--Need to link this section to the script to render the quiz question as the h3 and the options as the ul, each li is a button-->
-    <section id="quizContent">
-        <h3 id="question-title"></h3>
-        <ul id=""></ul>
-        
+    <section id="game" class="is-inactive">
+        GAME
     </section>
 
-    <script src="./assets/script.js"></script>
+    <section id="game-end" class="is-inactive">
+        NOT GAME
+    </section>
+
+    <section id="hi-score" class="is-inactive">
+        HI-SCORE
+    </section>
+
+<script src="./assets/script.js"></script>
 </body>
 </html>

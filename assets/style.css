@@ -46,3 +46,11 @@ button:hover {
     transform: scale(1.05);
     cursor: pointer;
 }
+
+.is-active {
+    display: flex;
+}
+
+.is-inactive {
+    display: none;
+}
