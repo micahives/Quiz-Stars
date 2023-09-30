@@ -23,7 +23,42 @@ const quizQuestions = [
         question: "Which of the following is not a primitive data type in JavaScript?",
         options: ["Object", "NULL", "String", "Boolean"],
         answer: "Object"      
-    }
+    },
+    {
+        question: "What does 'NaN' mean in JavaScript?",
+        options: ["Not a name", "Not a number", "Not a node", "Need a number"],
+        answer: "Not a number"      
+    }, 
+    {
+        question: "What is the syntax for selecting a random index of an array?",
+        options: ["Math.floor(Math.random() * array.length);", "Math.random() * array.length;", "Math.random(array);", "Math.random(array.length);"],
+        answer: "Math.floor(Math.random() * array.length);"      
+    },
+    {
+        question: "Which best defines a 'for' loop in JavaScript?",
+        options: ["Loops through the properties of an object", "Loops through a block of code a number of times", "Loops through a block of code while a specified condition is true", "Loops through the values of an iterable object"],
+        answer: "Loops through a block of code a number of times"      
+    },
+    {
+        question: "Can a variable that is defined within a function be used outside the function in JavaScript?",
+        options: ["Yes", "No"],
+        answer: "No"      
+    },
+    {
+        question: "Which JavaScript array method adds an element to the beginning of an array?",
+        options: [".push()", ".shift()", ".unpush()", ".unshift()"],
+        answer: ".unshift()"      
+    },
+    {
+        question: "Is the JSON format text only?",
+        options: ["Yes", "No"],
+        answer: "Yes"      
+    },
+    {
+        question: "What does the JavaScript 'this' keyword refer to?",
+        options: ["An object", "A function", "An Array", "A method"],
+        answer: "An object"      
+    }, 
 ]
 
 startButton.addEventListener('click', function() {
