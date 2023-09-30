@@ -7,7 +7,9 @@ var timerElement = document.getElementById('countdown');
 var startButton = document.getElementById('startButton');
 
 var score = 0;
+var timeLeft = 60;
 
+// Array of objects, each containing a question with multiple choices and the correct answer
 const quizQuestions = [
     {
         question: "What HTML element is used to embed JavaScript code?",
@@ -58,9 +60,11 @@ const quizQuestions = [
         question: "What does the JavaScript 'this' keyword refer to?",
         options: ["An object", "A function", "An Array", "A method"],
         answer: "An object"      
-    }, 
+    }
 ]
 
+
+// Hit 'Start Quiz!', starts game and runs functions
 startButton.addEventListener('click', function() {
     startButton.disabled = true;
     countdown();
@@ -68,6 +72,7 @@ startButton.addEventListener('click', function() {
     renderQuiz();
 });
 
+// Dictates visibility of the game sections
 function startGame() {
     preGame.setAttribute("class", "is-inactive");
     game.setAttribute("class", "is-active");
@@ -86,7 +91,7 @@ function viewHiScore() {
 }
 
 function countdown() {
-    var timeLeft = 60;
+    timeLeft = 60;
 
     var timeInterval = setInterval(function () {
         if (timeLeft >= 0) {
@@ -98,8 +103,11 @@ function countdown() {
     }, 1000);
 }
 
-// This function will generate a random quiz question and displays it in the UI
+// Generates a random quiz question and displays a list of multiple choices
 function renderQuiz() {
+
+    // Variable to later append and display quiz renderings
+    var gameContainer = document.getElementById("game");
 
     // Gets a random index from quizQuestions and selects the question at that index
     var randomIndex = Math.floor(Math.random()* quizQuestions.length);
@@ -112,6 +120,7 @@ function renderQuiz() {
     // Creates list to hold options for the question
     var optionsList = document.createElement("ul");
 
+    // For each question, creates a list item within the list (as a button) for each option in the options array within quizQuestions
     randomQuestion.options.forEach(function (optionText) {
 
         var optionItem = document.createElement("li");
@@ -119,25 +128,45 @@ function renderQuiz() {
         var optionButton = document.createElement("button");
         optionButton.textContent = optionText;
 
+        // When option button is clicked, compare the selection with the answer value
         optionButton.addEventListener('click', function() {
+            // Creates variable as an <h3> to display 'Correct!' if the answer matches, else 'Incorrect.'
+            var feedback = document.createElement("h3");
+
             if (optionText === randomQuestion.answer) {
-
+                score++;
+                feedback.textContent = "Correct!";
+                feedback.style.color = "green";
             } else {
-
+                timeLeft -= 10;
+                feedback.textContent = "Incorrect.";
+                feedback.style.color = "red";
             }
 
-            optionsList.querySelectorAll('button').forEach(function (button) {
-                button.disabled = true;
-            });
-        });
+            // Displays feedback on the screen 
+            gameContainer.appendChild(feedback);
 
+            questionTitle.remove();
+            optionsList.remove();
+
+            // Feedback is displayed to the user for one second, then removes feedback and continues to render quiz as long as questions remain
+            setTimeout(function() {
+                feedback.remove();
+            if (quizQuestions.length > 0) {
+                renderQuiz();
+            } else {
+                endGame();
+            }
+        }, 1000);
+    });
+
+    // Within the forEach function that renders the list items, appends the options to their respective element
         optionItem.appendChild(optionButton);
-
         optionsList.appendChild(optionItem);
+
     });
 
     // Appends random question to the "game" container
-    var gameContainer = document.getElementById("game");
     gameContainer.appendChild(questionTitle);
     gameContainer.appendChild(optionsList);
 }
