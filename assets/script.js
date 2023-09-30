@@ -21,8 +21,8 @@ const quizQuestions = [
     },
     {
         question: "Which of the following is not a primitive data type in JavaScript?",
-        options: ["object", "NULL", "String", "Boolean"],
-        answer: "object"      
+        options: ["Object", "NULL", "String", "Boolean"],
+        answer: "Object"      
     }
 ]
 
@@ -30,6 +30,7 @@ startButton.addEventListener('click', function() {
     startButton.disabled = true;
     countdown();
     startGame();
+    renderQuiz();
 });
 
 function startGame() {
@@ -62,16 +63,46 @@ function countdown() {
     }, 1000);
 }
 
-// This function will generate a random quiz question and that question will display as the UI
+// This function will generate a random quiz question and displays it in the UI
 function renderQuiz() {
-    var randomIndex = Math.floor(Math.random() * quizQuestions.length);
+
+    // Gets a random index from quizQuestions and selects the question at that index
+    var randomIndex = Math.floor(Math.random()* quizQuestions.length);
     var randomQuestion = quizQuestions[randomIndex];
-    var randomQuestionEl = document.getElementById(randomQuestion.question);
 
-
-    // Display the random question as an h3 tag on the page
+    // Creates h3 element for the random quiz question
     var questionTitle = document.createElement("h3");
     questionTitle.textContent = randomQuestion.question;
-    console.log(randomQuestion.question);
-}
 
+    // Creates list to hold options for the question
+    var optionsList = document.createElement("ul");
+
+    randomQuestion.options.forEach(function (optionText) {
+
+        var optionItem = document.createElement("li");
+
+        var optionButton = document.createElement("button");
+        optionButton.textContent = optionText;
+
+        optionButton.addEventListener('click', function() {
+            if (optionText === randomQuestion.answer) {
+
+            } else {
+
+            }
+
+            optionsList.querySelectorAll('button').forEach(function (button) {
+                button.disabled = true;
+            });
+        });
+
+        optionItem.appendChild(optionButton);
+
+        optionsList.appendChild(optionItem);
+    });
+
+    // Appends random question to the "game" container
+    var gameContainer = document.getElementById("game");
+    gameContainer.appendChild(questionTitle);
+    gameContainer.appendChild(optionsList);
+}
