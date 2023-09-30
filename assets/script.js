@@ -1,13 +1,16 @@
-var preGame = document.getElementById("pre-game");
-var game = document.getElementById("game");
-var gameEnd = document.getElementById("game-end");
-var hiScore = document.getElementById("hi-score");
+// DOM elements
+const preGame = document.getElementById("pre-game");
+const game = document.getElementById("game");
+const gameEnd = document.getElementById("game-end");
+const hiScore = document.getElementById("hi-score");
+const timerElement = document.getElementById('countdown');
+const startButton = document.getElementById('startButton');
 
-var timerElement = document.getElementById('countdown');
-var startButton = document.getElementById('startButton');
-
+// Game variables
 var score = 0;
 var timeLeft = 60;
+var finalScore = 0;
+let gameEnded = false;
 
 // Array of objects, each containing a question with multiple choices and the correct answer
 const quizQuestions = [
@@ -63,24 +66,32 @@ const quizQuestions = [
     }
 ]
 
+// Hit 'Start Quiz!'
+startButton.addEventListener('click', startQuiz);
 
-// Hit 'Start Quiz!', starts game and runs functions
-startButton.addEventListener('click', function() {
+// Runs timer and quiz functions
+function startQuiz() {
+    finalScore = 0;
     startButton.disabled = true;
     countdown();
     startGame();
     renderQuiz();
-});
+}
 
-// Dictates visibility of the game sections
+// Dictates visibility of the game sections (start, end, high-score)
 function startGame() {
     preGame.setAttribute("class", "is-inactive");
     game.setAttribute("class", "is-active");
 }
 
 function endGame() {
+    gameEnded = true;
     game.setAttribute("class", "is-inactive");
     gameEnd.setAttribute("class", "is-active");
+    console.log(finalScore);
+    
+    const scoreDisplay = document.getElementById('finalScore');
+    scoreDisplay.textContent = "Final Score: " + finalScore;
 }
 
 function viewHiScore() {
@@ -93,45 +104,57 @@ function viewHiScore() {
 function countdown() {
     timeLeft = 60;
 
-    var timeInterval = setInterval(function () {
-        if (timeLeft >= 0) {
+    const timeInterval = setInterval(function () {
+        // If the game hasn't ended, keep the timer going
+        if (gameEnded) {
+            clearInterval(timeInterval);
+            return;
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timeInterval);
+            endGame();
+        } else {
             timerElement.textContent = "Time Remaining: " + timeLeft;
             timeLeft--;
-        } else {
-            clearInterval(timeInterval);
         }
     }, 1000);
 }
 
 // Generates a random quiz question and displays a list of multiple choices
 function renderQuiz() {
-
     // Variable to later append and display quiz renderings
-    var gameContainer = document.getElementById("game");
+    const gameContainer = document.getElementById("game");
 
-    // Gets a random index from quizQuestions and selects the question at that index
-    var randomIndex = Math.floor(Math.random()* quizQuestions.length);
-    var randomQuestion = quizQuestions[randomIndex];
+    if (quizQuestions.length === 0 || timeLeft <= 0) {
+        endGame();
+        return;
+    }
+
+    // Gets a random index from quizQuestions and selects the question at that index.
+    // Removes from question pool by splicing at the selected index. Avoids repeat questions.
+    const randomIndex = Math.floor(Math.random()* quizQuestions.length);
+    const randomQuestion = quizQuestions.splice(randomIndex, 1)[0];
 
     // Creates h3 element for the random quiz question
-    var questionTitle = document.createElement("h3");
+    const questionTitle = document.createElement("h3");
     questionTitle.textContent = randomQuestion.question;
 
     // Creates list to hold options for the question
-    var optionsList = document.createElement("ul");
+    const optionsList = document.createElement("ul");
 
     // For each question, creates a list item within the list (as a button) for each option in the options array within quizQuestions
     randomQuestion.options.forEach(function (optionText) {
 
-        var optionItem = document.createElement("li");
+        const optionItem = document.createElement("li");
 
-        var optionButton = document.createElement("button");
+        const optionButton = document.createElement("button");
         optionButton.textContent = optionText;
 
         // When option button is clicked, compare the selection with the answer value
         optionButton.addEventListener('click', function() {
             // Creates variable as an <h3> to display 'Correct!' if the answer matches, else 'Incorrect.'
-            var feedback = document.createElement("h3");
+            const feedback = document.createElement("h3");
 
             if (optionText === randomQuestion.answer) {
                 score++;
@@ -141,7 +164,13 @@ function renderQuiz() {
                 timeLeft -= 10;
                 feedback.textContent = "Incorrect.";
                 feedback.style.color = "red";
+
+                if (score > 0) {
+                    score -= 1;
+                }
             }
+
+            finalScore = score + timeLeft;
 
             // Displays feedback on the screen 
             gameContainer.appendChild(feedback);
