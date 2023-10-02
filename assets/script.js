@@ -5,14 +5,17 @@ const gameEnd = document.getElementById("game-end");
 const hiScore = document.getElementById("hi-score");
 const timerElement = document.getElementById('countdown');
 const startButton = document.getElementById('startButton');
+const scoreDisplay = document.getElementById("finalScore");
 
 // Game variables
 var score = 0;
 var timeLeft = 60;
 var finalScore = 0;
 let gameEnded = false;
+let timeInterval;
+const highScores = [];
 
-// Array of objects, each containing a question with multiple choices and the correct answer
+// Quiz questions, an array of objects
 const quizQuestions = [
     {
         question: "What HTML element is used to embed JavaScript code?",
@@ -66,13 +69,15 @@ const quizQuestions = [
     }
 ]
 
-// Hit 'Start Quiz!'
-startButton.addEventListener('click', startQuiz);
+// Sets up quiz when page loads so that the initial event listener is in place
+function initializeQuiz() {
+    startButton.addEventListener('click', startQuiz);
+    document.getElementById("submitScore").addEventListener("click", submitScore);
+    preGame.setAttribute("class", "is-active");
+}
 
-// Runs timer and quiz functions
+// Runs timer, activates game state, and calls renderQuiz for quiz content
 function startQuiz() {
-    finalScore = 0;
-    startButton.disabled = true;
     countdown();
     startGame();
     renderQuiz();
@@ -84,23 +89,17 @@ function startGame() {
     game.setAttribute("class", "is-active");
 }
 
+// What will be shown when the end-game is active
 function endGame() {
     gameEnded = true;
     game.setAttribute("class", "is-inactive");
     gameEnd.setAttribute("class", "is-active");
     console.log(finalScore);
-    
-    const scoreDisplay = document.getElementById('finalScore');
     scoreDisplay.textContent = "Final Score: " + finalScore;
+    document.getElementById("submitScore").style.display = "block";
 }
 
-function viewHiScore() {
-    preGame.setAttribute("class", "is-inactive");
-    game.setAttribute("class", "is-inactive");
-    gameEnd.setAttribute("class", "is-inactive");
-    hiScore.setAttribute("class", "is-active");
-}
-
+// Creates a timer
 function countdown() {
     timeLeft = 60;
 
@@ -127,7 +126,9 @@ function renderQuiz() {
     const gameContainer = document.getElementById("game");
 
     if (quizQuestions.length === 0 || timeLeft <= 0) {
-        endGame();
+        if (!gameEnded) {
+            endGame();
+        }
         return;
     }
 
@@ -164,17 +165,14 @@ function renderQuiz() {
                 timeLeft -= 10;
                 feedback.textContent = "Incorrect.";
                 feedback.style.color = "red";
-
-                if (score > 0) {
-                    score -= 1;
-                }
             }
 
-            finalScore = score + timeLeft;
+            finalScore = score;
 
             // Displays feedback on the screen 
             gameContainer.appendChild(feedback);
 
+            // Removes the previously answered question from the display
             questionTitle.remove();
             optionsList.remove();
 
@@ -199,3 +197,63 @@ function renderQuiz() {
     gameContainer.appendChild(questionTitle);
     gameContainer.appendChild(optionsList);
 }
+
+// When the Submit button is hit in the end game, stores userName input and score to a record and pushes to the highScores array
+// Array is sorted by score, set to local storage, high scores are then viewed
+function submitScore() {
+    const userName = document.getElementById("userName").value;
+    const userScore = finalScore;
+
+    const userRecord = {
+        name: userName,
+        score: userScore,
+    };
+
+    highScores.push(userRecord);
+
+    highScores.sort((a, b) => b.score - a.score);
+
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+
+    viewHiScore();
+
+    console.log("Submit button clicked");
+}
+
+// Activates high score display, gets high score from local storage and displays in list form
+// Back button will refresh the game
+function viewHiScore() {
+    preGame.setAttribute("class", "is-inactive");
+    game.setAttribute("class", "is-inactive");
+    gameEnd.setAttribute("class", "is-inactive");
+    hiScore.setAttribute("class", "is-active");
+
+    const hiScoreSection = document.getElementById("hi-score");
+    hiScoreSection.innerHTML = "<h3>High Scores</h3";
+
+    const storedHighScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+    if (storedHighScores.length === 0) {
+        hiScoreSection.innerHTML += "<p>No high scores yet</p>";
+    } else {
+        hiScoreSection.innerHTML += "<ol>";
+
+        for (var i = 0; i < storedHighScores.length; i++) {
+            const record = storedHighScores[i];
+            hiScoreSection.innerHTML += `<li>${record.name}: ${record.score}</li>`;
+        }
+
+        hiScoreSection.innerHTML += "</ol>";
+    }
+
+    const backButton = document.createElement("button");
+    backButton.textContent = "Go Back";
+
+    backButton.addEventListener("click", function() {
+            window.location.reload();
+    });
+
+    hiScoreSection.appendChild(backButton);
+}
+
+window.addEventListener('load', initializeQuiz);

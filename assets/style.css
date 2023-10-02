@@ -4,6 +4,15 @@ header {
     padding: 0 50px;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: #386641;
+}
+
 .left-heading {
     margin-right: auto;
   }
@@ -62,4 +71,12 @@ li {
 
 .is-inactive {
     display: none;
+}
+
+.username-input {
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
 }

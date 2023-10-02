@@ -8,8 +8,8 @@
 </head>
 <body>
     <header>
-        <h2 class="left-heading">View high scores</h2>
-        <h2 class="right heading" id="countdown">Time Remaining: 0 </h2>
+        <a onclick="viewHiScore()" href="#hi-score"><h2 class="left-heading">View high scores</h2></a>
+        <h2 class="right heading" id="countdown">Time Remaining: </h2>
     </header>
 
     <section id="pre-game" class="is-active">
@@ -18,18 +18,21 @@
         <button id="startButton">Start Quiz!</button>
     </section>
     
-    <!--Need to link this section to the script to render the quiz question as the h3 and the options as the ul, each li is a button-->
     <section id="game" class="is-inactive">
     </section>
 
     <section id="game-end" class="is-inactive">
         <h3 id="finalScore"></h3>
+        <label for="userName">Enter your initials:</label>
+        <input type="text" id="userName" class="username-input"/>
+        <button id="submitScore">Submit</button>
     </section>
 
     <section id="hi-score" class="is-inactive">
-        <button>Return to home</button>
+        <button>Go back</button>
+        <ul id="highScoresList"></ul>
     </section>
 
 <script src="./assets/script.js"></script>
 </body>
-</html>
+</html> 
